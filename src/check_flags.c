@@ -1,5 +1,4 @@
-#include "my_ls.h"
-#include <stdio.h>
+#include "../header/my_ls.h"
 
 void first_cli_arg(char *attr, char **av, char flag)
 {
