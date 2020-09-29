@@ -40,6 +40,7 @@ int my_strlen(char *s, int len);
 int my_strcmp(const char *s1, const char *s2);
 flags *check_flags(int ac, char **av);
 char *my_strcpy(char *dst, const char *src);
-c_entry *copy_entry(struct dirent *r_entry);
+c_entry *copy_entry(struct dirent *r_entry, int a_flag);
 node_entry *create_node(c_entry *data);
+void insert_node(node_entry **head, c_entry *data);
 #endif
