@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
-#define TRUE '1'
-#define FALSE '0'
+#define TRUE 1
+#define FALSE 0
 //simple enum to distiguish entries between files and directories
 typedef enum enum_f_type
 {
@@ -24,8 +24,9 @@ typedef struct copy_entry
 //check wich flags were passed on as CLI arguments
 typedef struct flags_struct
 {
-    char a;
-    char t;
+    int a;
+    int t;
+    char *file; 
 } flags;
 //Node of linked list used to organize entries read and copied (c_entry)
 //lexicographic, modified time (-t), dir or file
