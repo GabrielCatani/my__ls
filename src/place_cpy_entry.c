@@ -1,26 +1,43 @@
 #include "../header/my_ls.h"
 
-void place_cpy_entry(node_entry **head, c_entry cp_entry, int t_flag)
+void place_cpy_entry(node_entry **head, c_entry *cp_entry, int t_flag)
 {
-    node_entry *ptr_node;
+    node_entry **ptr_node;
 
-    ptr_node = *head;
-
-    while (ptr_node)
+    ptr_node = head;
+    if (!(*ptr_node))
     {
-        if (cp_entry.type == d && cp_entry.type != ptr_node->data->type)
-            ptr_node = ptr_node->next;
-        else if (cp_entry.type == d && cp_entry.type == ptr_node->data->type)
+        front_insert_node(ptr_node, cp_entry);
+    }
+    /*
+    else
+    {
+        while((*ptr_node))
         {
-            if (my_strcmp(cp_entry.name, ptr_node->data->name) <= 0)
+            printf("%s\n", (*ptr_node)->data->name);
+            if (cp_entry->type && (*ptr_node)->data->type)
             {
-                insert_node(head, &cp_entry);
+                if (my_strcmp(cp_entry->name, (*ptr_node)->data->name) <= 0)
+                {
+                    insert_node(ptr_node, cp_entry);
+                    break;
+                }
+            }
+            else if (!cp_entry->type && !(*ptr_node)->data->type)
+            {
+                if (my_strcmp(cp_entry->name, (*ptr_node)->data->name) <= 0)
+                {
+                    insert_node(ptr_node, cp_entry);
+                    break;
+                }
+            }
+            else if (cp_entry->type && !(*ptr_node)->data->type)
+            {
+                insert_node(ptr_node, cp_entry);
                 break;
             }
-            else
-            {
-                ptr_node = ptr_node->next;
-            }
+            (*ptr_node) = (*ptr_node)->next;
         }
     }
+    */   
 }

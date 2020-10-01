@@ -9,7 +9,7 @@ c_entry *copy_entry(struct dirent *r_entry, int a_flag)
     if(!cp_entry)
         return NULL;
     
-    if(a_flag == '0' && r_entry->d_name[0] == '.')
+    if(!a_flag && r_entry->d_name[0] == '.')
     {
         cp_entry = NULL;
         return cp_entry;
