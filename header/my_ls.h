@@ -8,6 +8,7 @@
 #include <stdio.h>
 #define TRUE 1
 #define FALSE 0
+#define EQUAL 2
 //simple enum to distiguish entries between files and directories
 typedef enum enum_f_type
 {
@@ -47,5 +48,5 @@ void front_insert_node(node_entry **head, c_entry *data);
 void place_cpy_entry(node_entry **head, c_entry *cp_entry, int t_flag);
 void print_cpy_list(node_entry **head);
 void insert_node(node_entry **head, c_entry *data);
-int is_precedent(c_entry *cp_entry, c_entry *node_data);
+int is_precedent(c_entry *cp_entry, c_entry *node_data, int t_flag);
 #endif
