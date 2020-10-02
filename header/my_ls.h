@@ -46,4 +46,6 @@ node_entry *create_node(c_entry *data);
 void front_insert_node(node_entry **head, c_entry *data);
 void place_cpy_entry(node_entry **head, c_entry *cp_entry, int t_flag);
 void print_cpy_list(node_entry **head);
+void insert_node(node_entry **head, c_entry *data);
+int is_precedent(c_entry *cp_entry, c_entry *node_data);
 #endif
