@@ -10,7 +10,11 @@ int is_time_precedent(filestat f_stat, read_entry *node_data, char *path)
     char *full_path;
 
     full_path = my_strjoin(path, (char*)node_data->d_name);
-    stat(full_path, &n_stat);
+    if (DT_LNK == node_data->d_type)
+        lstat(full_path, &n_stat);
+    else
+        stat(full_path, &n_stat);
+
     copy_sec = f_stat.st_mtim.tv_sec;
     node_sec = n_stat.st_mtim.tv_sec;
     copy_nano = f_stat.st_mtim.tv_nsec;
@@ -44,7 +48,11 @@ int is_precedent(read_entry *r_entry, read_entry *node_data, flags *flag)
     path = my_strjoin(flag->path, "/");
     full_path = my_strjoin(path, r_entry->d_name);
     n_type = (int)node_data->d_type;
-    stat(full_path, &f_stat);
+    if (DT_LNK == r_entry->d_type)
+        lstat(full_path, &f_stat);
+    else
+        stat(full_path, &f_stat);
+    
     if(S_ISDIR(f_stat.st_mode) || (DT_DIR == r_entry->d_type))
         e_type = d;
     else
@@ -63,7 +71,7 @@ int is_precedent(read_entry *r_entry, read_entry *node_data, flags *flag)
             free(path);
             if (check == TRUE)
                 return TRUE;
-            else if (check == FALSE)
+            else
                 return FALSE;
         }
         else

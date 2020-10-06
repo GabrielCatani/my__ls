@@ -1,6 +1,15 @@
-CC = gcc
-FLAGS = -Wall -Wextra -Werror -g3 -
-SRCS := ${wildcard src/*.c}
+CC=gcc
+FLAGS=-Wall -Wextra -Werror -g3 -fsanitize=address
+SRCS:=${wildcard src/*.c}
+HEADER=header/my_ls.h
+TARGET=my_ls
 
-all: ${SRCS}
-	${CC} ${FLAGS}
+$(TARGET): $(SRCS})
+	@echo "Creating my_ls binary.."
+	@$(CC) $(FLAGS) $(SRCS) $(HEADER) -o $(TARGET)
+
+clean:
+	@echo "Removing my_ls binary.."
+	@/bin/rm -rf $(TARGET)
+
+.PHONY: clean 
