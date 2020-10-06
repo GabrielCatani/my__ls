@@ -1,24 +1,27 @@
 #include "../header/my_ls.h"
 
-int is_time_precedent(c_entry *cp_entry, c_entry *node_data)
+int is_time_precedent(filestat f_stat, read_entry *node_data, char *path)
 {
     time_t copy_sec;
     time_t node_sec;
     time_t copy_nano;
     time_t node_nano;
+    filestat n_stat;
+    char *full_path;
 
-    copy_sec = cp_entry->mod_time_s;
-    node_sec = node_data->mod_time_s;
-    copy_nano = cp_entry->mod_time_ns;
-    node_nano = node_data->mod_time_ns;
+    full_path = my_strjoin(path, (char*)node_data->d_name);
+    stat(full_path, &n_stat);
+    copy_sec = f_stat.st_mtim.tv_sec;
+    node_sec = n_stat.st_mtim.tv_sec;
+    copy_nano = f_stat.st_mtim.tv_nsec;
+    node_nano = n_stat.st_mtim.tv_nsec;
+    free(full_path);
     if (copy_sec == node_sec)
     {
         if (copy_nano <= node_nano)
         {
             return TRUE;
         }
-        else if (copy_nano == node_nano)
-            return EQUAL;
     }
     else if (copy_sec < node_nano)
     {
@@ -28,33 +31,56 @@ int is_time_precedent(c_entry *cp_entry, c_entry *node_data)
     return FALSE;
 }
 
-int is_precedent(c_entry *cp_entry, c_entry *node_data, int t_flag)
+int is_precedent(read_entry *r_entry, read_entry *node_data, flags *flag)
 {
     int check;
+    filestat f_stat;
+    f_type e_type;
+    f_type n_type;
+    char *path;
+    char *full_path;
 
     check = FALSE;
-    if (cp_entry->type == node_data->type)
+    path = my_strjoin(flag->path, "/");
+    full_path = my_strjoin(path, r_entry->d_name);
+    n_type = (int)node_data->d_type;
+    stat(full_path, &f_stat);
+    if(S_ISDIR(f_stat.st_mode) || (DT_DIR == r_entry->d_type))
+        e_type = d;
+    else
+        e_type = f;
+    if((DT_DIR == node_data->d_type))
+        n_type = d;
+    else
+        n_type = f;
+    free(full_path);
+    
+    if (e_type == n_type)
     {
-        if (t_flag)
+        if (flag->t)
         {
-            check = is_time_precedent(cp_entry, node_data);
+            check = is_time_precedent(f_stat, node_data, path);
+            free(path);
             if (check == TRUE)
                 return TRUE;
             else if (check == FALSE)
                 return FALSE;
         }
-        else if (check == EQUAL || !t_flag)
+        else
         {
-            if ((my_strcmp(cp_entry->name, node_data->name)) <= 0)
+            free(path);
+            if ((my_strcmp(r_entry->d_name, (char*)node_data->d_name)) <= 0)
                 return TRUE;
             else
                 return FALSE;
         }
     }
-    else if (cp_entry->type && !(node_data->type))
+    else if (e_type == 1 && n_type == 0)
     {
+        free(path);
         return TRUE;
     }
 
+    free(path);
     return FALSE;
 }

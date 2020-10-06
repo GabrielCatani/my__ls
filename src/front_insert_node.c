@@ -1,6 +1,6 @@
 #include "../header/my_ls.h"
 
-void front_insert_node(node_entry **head, c_entry *data)
+void front_insert_node(node_entry **head, read_entry *data)
 {
     node_entry *ref_ptr;
 

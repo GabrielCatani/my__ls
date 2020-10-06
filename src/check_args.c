@@ -2,25 +2,25 @@
 
 void first_cli_arg(int *attr, char **av, char flag)
 {
-    if (av[1][1] == flag)
+    if (av[1][0] == '-' && av[1][1] == flag)
             *attr = TRUE;
         else if (my_strlen(av[1], 0) > 2)
         {
-            if (av[1][2] == flag)
+            if (av[1][0] == '-' && av[1][2] == flag)
                 *attr = TRUE;
         }
 }
 
 void second_cli_arg(int *attr, char **av, char flag)
 {
-    if (av[1][1] == flag)
+    if (av[1][0] == '-' && av[1][1] == flag)
             *attr = TRUE;
         else if (my_strlen(av[1], 0) > 2)
         {
-            if (av[1][2] == flag)
+            if (av[1][0] == '-' && av[1][2] == flag)
                 *attr = TRUE;
         }
-    else if (av[2][1] == flag)
+    else if (av[2][0] == '-' && av[2][1] == flag)
         *attr = TRUE;
 }
 
@@ -31,7 +31,7 @@ flags *check_args(int ac, char **av)
     fs = (flags *)malloc(sizeof(flags));
     fs->a = FALSE;
     fs->t = FALSE;
-    fs->file = NULL;
+    fs->path = ".";
 
     if (ac == 2)
     {
@@ -39,8 +39,8 @@ flags *check_args(int ac, char **av)
         first_cli_arg(&fs->t, av, 't');
         if (fs->a == FALSE && fs->t == FALSE)
         {
-            fs->file = (char*)malloc(sizeof(char) * my_strlen(av[1], 0) + 1);
-            fs->file = my_strcpy(fs->file, av[1]);
+            fs->path = (char*)malloc(sizeof(char) * my_strlen(av[1], 0) + 1);
+            fs->path = my_strcpy(fs->path, av[1]);
         }
     }
     else if (ac == 3)
@@ -49,15 +49,15 @@ flags *check_args(int ac, char **av)
         first_cli_arg(&fs->t, av, 't');
         if (fs->a == TRUE && fs->t == TRUE)
         {
-            fs->file = (char*)malloc(sizeof(char) * my_strlen(av[2], 0) + 1);
-            fs->file = my_strcpy(fs->file, av[2]);
+            fs->path = (char*)malloc(sizeof(char) * my_strlen(av[2], 0) + 1);
+            fs->path = my_strcpy(fs->path, av[2]);
         }
         second_cli_arg(&fs->a, av, 'a');
         second_cli_arg(&fs->t, av, 't');
         if (fs->a == FALSE || fs->t == FALSE)
         {
-            fs->file = (char*)malloc(sizeof(char) * my_strlen(av[2], 0) + 1);
-            fs->file = my_strcpy(fs->file, av[2]);
+            fs->path = (char*)malloc(sizeof(char) * my_strlen(av[2], 0) + 1);
+            fs->path = my_strcpy(fs->path, av[2]);
         }
     }
     else if (ac == 4)
@@ -68,8 +68,8 @@ flags *check_args(int ac, char **av)
         second_cli_arg(&fs->t, av, 't');
         if (fs->a == TRUE && fs->t == TRUE)
         {
-            fs->file = (char*)malloc(sizeof(char) * my_strlen(av[3], 0) + 1);
-            fs->file = my_strcpy(fs->file, av[3]);
+            fs->path = (char*)malloc(sizeof(char) * my_strlen(av[3], 0) + 1);
+            fs->path = my_strcpy(fs->path, av[3]);
         }
     }
     

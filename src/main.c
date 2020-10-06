@@ -3,27 +3,25 @@
 int main(int ac, char **av)
 {
     DIR *folder;
-    struct dirent *r_entry;
+    read_entry *r_entry;
     flags *flags_passed;
-    c_entry *cp_entry;
     node_entry *head_cpy_entries;
-
+ 
     head_cpy_entries = NULL;
     flags_passed = check_args(ac, av);
-    if (flags_passed->file) 
-        folder = opendir(flags_passed->file);
-    else
-        folder = opendir(".");
+
+    folder = opendir(flags_passed->path);
     while ((r_entry = readdir(folder)))
     {
-        cp_entry = copy_entry(r_entry, flags_passed->a);
-        if (cp_entry)
-            place_cpy_entry(&head_cpy_entries, cp_entry, flags_passed->t);
+        place_entry(&head_cpy_entries, r_entry, flags_passed);
     }
 
-    print_cpy_list(&head_cpy_entries);
-    
+
+    free(flags_passed->path);
+    free(flags_passed);
+    print_list(&head_cpy_entries);
+    clean_list(&head_cpy_entries); 
     closedir(folder);
-    
+     
     return 0;
-}
+ }

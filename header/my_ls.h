@@ -8,33 +8,26 @@
 #include <stdio.h>
 #define TRUE 1
 #define FALSE 0
-#define EQUAL 2
+typedef struct dirent read_entry;
+typedef struct stat filestat;
 //simple enum to distiguish entries between files and directories
 typedef enum enum_f_type
 {
     d, f
 } f_type;
-//Copy of file entry read from open directory
-typedef struct copy_entry
-{
-    char *name;
-    f_type type;
-    time_t mod_time_s;
-    time_t mod_time_ns;
-} c_entry;
 //check wich flags were passed on as CLI arguments
 typedef struct flags_struct
 {
     int a;
     int t;
-    char *file; 
+    char *path; 
 } flags;
 //Node of linked list used to organize entries read and copied (c_entry)
 //lexicographic, modified time (-t), dir or file
 typedef struct node_entry
 {
     struct node_entry *next;
-    c_entry *data;
+    void *data;
 } node_entry;
 void my_putchar(char c);
 void my_putstr(char *s);
@@ -42,11 +35,12 @@ int my_strlen(char *s, int len);
 int my_strcmp(const char *s1, const char *s2);
 flags *check_args(int ac, char **av);
 char *my_strcpy(char *dst, const char *src);
-c_entry *copy_entry(struct dirent *r_entry, int a_flag);
-node_entry *create_node(c_entry *data);
-void front_insert_node(node_entry **head, c_entry *data);
-void place_cpy_entry(node_entry **head, c_entry *cp_entry, int t_flag);
-void print_cpy_list(node_entry **head);
-void insert_node(node_entry **head, c_entry *data);
-int is_precedent(c_entry *cp_entry, c_entry *node_data, int t_flag);
+node_entry *create_node(void *data);
+void front_insert_node(node_entry **head, read_entry *data);
+void place_entry(node_entry **head, read_entry *r_entry, flags *flag);
+void print_list(node_entry **head);
+void insert_node(node_entry **node, read_entry *data);
+int is_precedent(read_entry *r_entry, read_entry *node_data, flags *flag);
+void clean_list(node_entry **head);
+char *my_strjoin(char *s1, char *s2);
 #endif
