@@ -6,27 +6,31 @@ int main(int ac, char **av)
     read_entry *r_entry;
     flags *flags_passed;
     node_entry *head_cpy_entries;
- 
+    int i;
+
     head_cpy_entries = NULL;
-    flags_passed = check_args(ac, av);
-    
-    folder = opendir(flags_passed->path);
-    if (!folder)
+    flags_passed = (flags*)malloc(sizeof(flags));
+    check_args(ac, av, &flags_passed);
+    i = 0;
+    while (i < flags_passed->dirs)
     {
-        free(flags_passed->path);
-        free(flags_passed);
-        return 1;
-    }
-    while ((r_entry = readdir(folder)))
-    {
-        place_entry(&head_cpy_entries, r_entry, flags_passed);
+        folder = opendir(flags_passed->path[i]);
+        if (!folder)
+        {
+            clean_flags_passed(&flags_passed);
+            return 1;
+        }
+        while ((r_entry = readdir(folder)))
+        {
+            place_entry(&head_cpy_entries, r_entry, flags_passed, flags_passed->path[i]);
+        }
+        clear_flags_passed(&flags_passed); 
+        print_list(&head_cpy_entries);
+        clean_list(&head_cpy_entries); 
+        closedir(folder);
+        i++;
     }
 
-    free(flags_passed->path);
-    free(flags_passed);
-    print_list(&head_cpy_entries);
-    clean_list(&head_cpy_entries); 
-    closedir(folder);
-     
+    clean_flags_passed(&flags_passed);     
     return 0;
  }

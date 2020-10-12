@@ -1,6 +1,6 @@
 #include "../header/my_ls.h"
 
-int is_time_precedent(filestat f_stat, read_entry *node_data, char *path)
+int is_time_precedent(char *f_name, filestat f_stat, read_entry *node_data, char *path)
 {
     unsigned long copy_sec;
     unsigned long node_sec;
@@ -23,9 +23,14 @@ int is_time_precedent(filestat f_stat, read_entry *node_data, char *path)
     free(full_path);
     if (copy_sec == node_sec)
     {
-        if (copy_nano <= node_nano)
+        if (copy_nano < node_nano)
         {
             return FALSE;
+        }
+        else if (copy_nano == node_nano)
+        {
+            if (my_strcmp(f_name, node_data->d_name) > 0)
+                return FALSE;
         }
     }
     else if (copy_sec < node_sec)
@@ -35,7 +40,7 @@ int is_time_precedent(filestat f_stat, read_entry *node_data, char *path)
     return TRUE;
 }
 
-int is_precedent(read_entry *r_entry, read_entry *node_data, flags *flag)
+int is_precedent(read_entry *r_entry, read_entry *node_data, flags *flag, char* dir)
 {
     int check;
     filestat f_stat;
@@ -43,7 +48,7 @@ int is_precedent(read_entry *r_entry, read_entry *node_data, flags *flag)
     char *full_path;
 
     check = FALSE;
-    path = my_strjoin(flag->path, "/");
+    path = my_strjoin(dir, "/");
     full_path = my_strjoin(path, r_entry->d_name);
     if (DT_LNK == r_entry->d_type)
         lstat(full_path, &f_stat);
@@ -53,8 +58,7 @@ int is_precedent(read_entry *r_entry, read_entry *node_data, flags *flag)
     free(full_path);
     if (flag->t)
     {
-        printf("%s\n", r_entry->d_name);
-        check = is_time_precedent(f_stat, node_data, path);
+        check = is_time_precedent(r_entry->d_name, f_stat, node_data, path);
         free(path);
         return check;
     }
