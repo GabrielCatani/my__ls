@@ -62,6 +62,14 @@ int is_precedent(read_entry *r_entry, read_entry *node_data, flags *flag, char* 
         free(path);
         return check;
     }
+    else if (flag->dirs == 1)
+    {
+        free(path);
+        if ((my_strcmp(r_entry->d_name, (char*)node_data->d_name)) <= 0)
+            return TRUE;
+        else
+            return FALSE;
+    }
     else if ((r_entry->d_type == node_data->d_type) || (r_entry->d_type != DT_DIR && node_data->d_type != DT_DIR))
     {
         free(path);

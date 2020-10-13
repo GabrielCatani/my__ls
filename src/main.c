@@ -35,6 +35,8 @@ int main(int ac, char **av)
         clean_list(&head_cpy_entries); 
         closedir(folder);
         i++;
+        if (i < flags_passed->dirs)
+            my_putstr("\n");
     }
     clean_flags_passed(&flags_passed);     
     return 0;
