@@ -21,7 +21,7 @@ typedef struct flags_struct
     int a;
     int t;
     int dirs;
-    char **path;
+    int *dirs_index;
 } flags;
 //Node of linked list used to organize entries read and copied (c_entry)
 //lexicographic, modified time (-t), dir or file
@@ -34,7 +34,7 @@ void my_putchar(char c);
 void my_putstr(char *s);
 int my_strlen(char *s, int len);
 int my_strcmp(const char *s1, const char *s2);
-flags *check_args(int ac, char **av, flags **fs);
+void check_args(int ac, char **av, flags **fs);
 char *my_strcpy(char *dst, const char *src);
 node_entry *create_node(void *data);
 void front_insert_node(node_entry **head, read_entry *data);

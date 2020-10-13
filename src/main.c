@@ -10,11 +10,15 @@ int main(int ac, char **av)
 
     head_cpy_entries = NULL;
     flags_passed = (flags*)malloc(sizeof(flags));
+    flags_passed->dirs_index = NULL;
     check_args(ac, av, &flags_passed);
     i = 0;
     while (i < flags_passed->dirs)
     {
-        folder = opendir(flags_passed->path[i]);
+        if (!(flags_passed->dirs_index))
+            folder = opendir(".");
+        else    
+            folder = opendir(av[flags_passed->dirs_index[i]]);
         if (!folder)
         {
             clean_flags_passed(&flags_passed);
@@ -22,15 +26,16 @@ int main(int ac, char **av)
         }
         while ((r_entry = readdir(folder)))
         {
-            place_entry(&head_cpy_entries, r_entry, flags_passed, flags_passed->path[i]);
+            if (!(flags_passed->dirs_index))
+                place_entry(&head_cpy_entries, r_entry, flags_passed, ".");
+            else
+                place_entry(&head_cpy_entries, r_entry, flags_passed, av[flags_passed->dirs_index[i]]);
         }
-        clear_flags_passed(&flags_passed); 
         print_list(&head_cpy_entries);
         clean_list(&head_cpy_entries); 
         closedir(folder);
         i++;
     }
-
     clean_flags_passed(&flags_passed);     
     return 0;
  }

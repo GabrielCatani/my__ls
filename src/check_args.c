@@ -6,6 +6,8 @@ int check_flags_dir_qty(int ac, char **av, flags **fs)
     int j;
     int dirs;
 
+    (*fs)->a = 0;
+    (*fs)->t = 0;
     i = 1;
     dirs = 0;
     while (i < ac)
@@ -37,24 +39,25 @@ void check_dirs(int ac, char **av, flags **fs)
 
     i = 1;
     j = 0;
+
     while (i < ac)
     {
         if (av[i][0] != '-')
         {
-          (*fs)->path[j] = (char*)malloc(sizeof(char) * my_strlen(av[i], 0) + 1);
-          my_strcpy((*fs)->path[j], av[i]);
-          j++;
+            (*fs)->dirs_index[j] = i;
+            j++;
         }
         i++;
     }
 }
 
-flags *check_args(int ac, char **av, flags **fs) 
+void check_args(int ac, char **av, flags **fs) 
 {
-
     (*fs)->dirs = check_flags_dir_qty(ac, av, fs);
-    (*fs)->path = (char**)malloc(sizeof(char*) * (*fs)->dirs);
-    check_dirs(ac, av, fs);
+    if ((*fs)->dirs)
+        (*fs)->dirs_index = (int*)malloc(sizeof(int) * (*fs)->dirs);
+    else
+        (*fs)->dirs = 1;    
 
-    return (*fs);
+    check_dirs(ac, av, fs);
 }
