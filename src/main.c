@@ -21,6 +21,9 @@ int main(int ac, char **av)
             folder = opendir(av[flags_passed->dirs_index[i]]);
         if (!folder)
         {
+            my_putstr("my_ls: cannot access '");
+            my_putstr(av[flags_passed->dirs_index[i]]);
+            my_putstr("': No such file or directory");
             clean_flags_passed(&flags_passed);
             return 1;
         }
@@ -30,6 +33,11 @@ int main(int ac, char **av)
                 place_entry(&head_cpy_entries, r_entry, flags_passed, ".");
             else
                 place_entry(&head_cpy_entries, r_entry, flags_passed, av[flags_passed->dirs_index[i]]);
+        }
+        if (flags_passed->dirs > 1)
+        {
+            my_putstr(av[flags_passed->dirs_index[i]]);
+            my_putstr(":\n");
         }
         print_list(&head_cpy_entries);
         clean_list(&head_cpy_entries); 

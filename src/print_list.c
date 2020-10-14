@@ -10,7 +10,10 @@ void print_list(node_entry **head)
     {
         node_data = (read_entry*)node_ptr->data;
         my_putstr(node_data->d_name);
-        my_putstr("\n");
         node_ptr = node_ptr->next;
+        if (node_ptr)
+            my_putstr("  ");
+        else
+            my_putstr("\n");
     }
 }
