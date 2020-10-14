@@ -1,91 +1,63 @@
 #include "../header/my_ls.h"
 
-void first_cli_arg(int *attr, char **av, char flag)
+int check_flags_dir_qty(int ac, char **av, flags **fs)
 {
-    if (av[1][0] == '-' && av[1][1] == flag)
-            *attr = TRUE;
-        else if (my_strlen(av[1], 0) > 2)
-        {
-            if (av[1][0] == '-' && av[1][2] == flag)
-                *attr = TRUE;
-        }
-}
+    int i;
+    int j;
+    int dirs;
 
-void second_cli_arg(int *attr, char **av, char flag)
-{
-    if ((my_strlen(av[1], 0) == 2) && (my_strlen(av[2], 0) == 2))
+    (*fs)->a = 0;
+    (*fs)->t = 0;
+    i = 1;
+    dirs = 0;
+    while (i < ac)
     {
-        if (av[1][0] == '-' && av[1][1] == flag)
-                *attr = TRUE;
-            else if (my_strlen(av[1], 0) > 2)
+        j = 0;
+        if (av[i][0] == '-')
+        {
+            while (av[i][j])
             {
-                if (av[1][0] == '-' && av[1][2] == flag)
-                    *attr = TRUE;
+                if (av[i][j] == 'a')
+                    (*fs)->a = 1;
+                if (av[i][j] == 't')
+                    (*fs)->t = 1;    
+                j++;
             }
-        else if (av[2][0] == '-' && av[2][1] == flag)
-            *attr = TRUE;
+        }
+        else
+            dirs += 1;
+        i++;
+    }
+
+    return dirs;
+}
+
+void check_dirs(int ac, char **av, flags **fs)
+{
+    int i;
+    int j;
+
+    i = 1;
+    j = 0;
+
+    while (i < ac)
+    {
+        if (av[i][0] != '-')
+        {
+            (*fs)->dirs_index[j] = i;
+            j++;
+        }
+        i++;
     }
 }
 
-flags *check_args(int ac, char **av)
+void check_args(int ac, char **av, flags **fs) 
 {
-    flags *fs;
+    (*fs)->dirs = check_flags_dir_qty(ac, av, fs);
+    if ((*fs)->dirs)
+        (*fs)->dirs_index = (int*)malloc(sizeof(int) * (*fs)->dirs);
+    else
+        (*fs)->dirs = 1;    
 
-    fs = (flags *)malloc(sizeof(flags));
-    fs->a = FALSE;
-    fs->t = FALSE;
-
-    if (ac == 1)
-    {
-        fs->path = (char*)malloc(sizeof(char) + 1);
-        fs->path = my_strcpy(fs->path, ".");
-    }
-    else if (ac == 2)
-    {
-        first_cli_arg(&fs->a, av, 'a');
-        first_cli_arg(&fs->t, av, 't');
-        if (fs->a == FALSE && fs->t == FALSE)
-        {
-            fs->path = (char*)malloc(sizeof(char) * my_strlen(av[1], 0) + 1);
-            fs->path = my_strcpy(fs->path, av[1]);
-        }
-        else
-        {
-            fs->path = (char*)malloc(sizeof(char) + 1);
-            fs->path = my_strcpy(fs->path, ".");
-        }
-    }
-    else if (ac == 3)
-    {
-        first_cli_arg(&fs->a, av, 'a');
-        first_cli_arg(&fs->t, av, 't');
-        if (fs->a == TRUE && fs->t == TRUE)
-        {
-            fs->path = (char*)malloc(sizeof(char) * my_strlen(av[2], 0) + 1);
-            fs->path = my_strcpy(fs->path, av[2]);
-        }
-        second_cli_arg(&fs->a, av, 'a');
-        second_cli_arg(&fs->t, av, 't');
-        if (fs->a == FALSE || fs->t == FALSE)
-        {
-            fs->path = (char*)malloc(sizeof(char) * my_strlen(av[2], 0) + 1);
-            fs->path = my_strcpy(fs->path, av[2]);
-        }
-        else
-        {
-            fs->path = (char*)malloc(sizeof(char) + 1);
-            fs->path = my_strcpy(fs->path, ".");
-        }
-    }
-    else if (ac == 4)
-    {
-        first_cli_arg(&fs->a, av, 'a');
-        first_cli_arg(&fs->t, av, 't');
-        second_cli_arg(&fs->a, av, 'a');
-        second_cli_arg(&fs->t, av, 't');
-        fs->path = (char*)malloc(sizeof(char) * my_strlen(av[3], 0) + 1);
-        fs->path = my_strcpy(fs->path, av[3]);
-    }
-    
-    return fs;
+    check_dirs(ac, av, fs);
 }
